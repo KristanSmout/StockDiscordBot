@@ -155,5 +155,5 @@ async def opinion (ctx, arg):
 
 
 
-
-Bot.run('NzE0OTMxNjY1MzY5MzAxMDIz.Xs12JQ.HsTJaT6jtYhT0Rvsupf94rli7y4')
+Token = open('Token.txt', 'r').read()
+Bot.run(Token)
