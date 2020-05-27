@@ -1,3 +1,3 @@
-python Main.py
+python bot.py
 
 PAUSE

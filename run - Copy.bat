@@ -1,3 +1,0 @@
-python offline.py
-
-PAUSE
