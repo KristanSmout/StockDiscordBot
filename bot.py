@@ -2,10 +2,14 @@ import discord,lxml
 import yfinance as yf
 from discord.ext import commands
 from forex_python.converter import CurrencyRates
+from forex_python.bitcoin import BtcConverter
+from forex_python.converter import CurrencyCodes
 
 
 Bot = commands.Bot(command_prefix = '!')
 C = CurrencyRates()
+B = BtcConverter()
+Currency = CurrencyCodes()
 
 
 
@@ -30,6 +34,7 @@ async def commands(ctx):
 
 @Bot.command(brief='Show excahnge rates for a specific currency',description='This command allows a range of currencies to be shown for the equivilent of 1 of the selected currency')
 async def exchangerate(ctx,arg):
+    arg = arg.upper()
     CList = C.get_rates(arg)
     FakeCList = str(CList)
     FakeCList = FakeCList.split('{')
@@ -48,12 +53,35 @@ async def exchangerate(ctx,arg):
     
     #CList = FakeCList.split(',')
     #await ctx.send(CList)
+
+@Bot.command(brief='Compare two currencies',description = 'Compare the direct value of two currencies')
+async def exchange(ctx,arg1,arg2):
+    arg1 = arg1.upper()
+    arg2 = arg2.upper()
     
+    if(arg1 == 'BTC' or arg2 == 'BTC'):
+        
+        if(arg1 == 'BTC'):
+            Value = B.get_latest_price(arg2)
+            await ctx.send('```' + '1 BTC = ' + str(Value) + ' ' + arg2 + '```')
+        else:
+            if(arg2 == 'BTC'):
+                Value = B.convert_to_btc(1,arg1)
+                await ctx.send('```' + '1 ' + arg1 + ' = ' + str(Value) + arg2 + '```')
+            else:
+                print('IDK')
+    else:
+    
+        Answer = C.get_rate(arg1,arg2)
+        Total = Answer
+        await ctx.send('``` ' + '1 ' + arg1 + ' = ' + str(Total) + ' ' + arg2 + '```')
+    
+
 @Bot.command(brief='Check for free share codes',description = 'This command will allow you to see any codes that can provide free shares')
 async def freeshare(ctx):
-    await ctx.send('If your account is less than 1 week old use the code "DIVEX"')
+    await ctx.send('If your account is less than 1 week old you can use the code' + '```' + "DIVEX" + '```')
 
-@Bot.command()
+@Bot.command(brief='Check company sustainability report',description='This command will give you a list of ecological sustainability ratings for the company')
 async def sus(ctx, arg):
     await ctx.send(arg)
     LocalTicker = yf.Ticker(str(arg))
@@ -170,6 +198,17 @@ async def opinion (ctx, arg):
     await ctx.send(arg)
     await ctx.send(FinalString)
 
+@Bot.command(brief='Get currency symbol',description='Get the symbol of the specified currency')
+async def symbol(ctx, arg):
+    arg = arg.upper()
+    if(arg != 'BTC'):
+        Symbol = Currency.get_symbol(arg)
+        await ctx.send('```' + str(arg) + ' is denoted as ' + Symbol + '```')
+    else:
+        Symbol = B.get_symbol()
+        await ctx.send('```' + 'Bitcoin is denoted as ' + Symbol + '```')
+
+###BITCOIN STUFF###
 
 
 Token = open('Token.txt', 'r').read()
