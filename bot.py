@@ -13,11 +13,11 @@ C = CurrencyRates()
 async def on_ready():
     print("Investment Bot Is Ready!")
     
-@Bot.command()
+@Bot.command(brief='Check if the bot is running',description='This is a command designed to check the bot is able to read messages and run commands')
 async def ping(ctx):
     await ctx.send('Pong!')
 
-@Bot.command()
+@Bot.command(brief='Show custom command list',description='Custom command viewer for the bot')
 async def commands(ctx):
     PublicCommands = [\
         '!ping','| Check the bot is alive'\
@@ -28,7 +28,7 @@ async def commands(ctx):
     await ctx.send('These are the current commands \n No information provided as a result of this bot is advise')
     print(PublicCommands)
 
-@Bot.command()
+@Bot.command(brief='Show excahnge rates for a specific currency',description='This command allows a range of currencies to be shown for the equivilent of 1 of the selected currency')
 async def exchangerate(ctx,arg):
     CList = C.get_rates(arg)
     FakeCList = str(CList)
@@ -49,7 +49,7 @@ async def exchangerate(ctx,arg):
     #CList = FakeCList.split(',')
     #await ctx.send(CList)
     
-@Bot.command()
+@Bot.command(brief='Check for free share codes',description = 'This command will allow you to see any codes that can provide free shares')
 async def freeshare(ctx):
     await ctx.send('If your account is less than 1 week old use the code "DIVEX"')
 
@@ -70,7 +70,7 @@ async def sus(ctx, arg):
         Finalstring = (Finalstring + ItemTitle + '' + Spacer + linesplit[Value] + '\n')
     await ctx.send(Finalstring + '```')
 
-@Bot.command()
+@Bot.command(brief='Check latest ex date and dividend payout',description = 'Check the latest ex date for company and see how much each share will produce as a dividend (Local Currency)')
 async def dividend(ctx, arg):
     try:
         await ctx.send(arg)
@@ -89,7 +89,7 @@ async def dividend(ctx, arg):
     except:
         await ctx.send('```diff\n - No Dividend Found```') 
 
-@Bot.command()
+@Bot.command(brief='See analyst opinions',description='Check the latest analyst reports on a specific company')
 async def opinion (ctx, arg):
 
     LocalTicker = yf.Ticker(str(arg))
