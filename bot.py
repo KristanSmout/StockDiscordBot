@@ -29,11 +29,25 @@ async def commands(ctx):
     print(PublicCommands)
 
 @Bot.command()
-async def exchange(ctx,arg):
+async def exchangerate(ctx,arg):
     CList = C.get_rates(arg)
-    FakeCList = CList.split('{')
-    CList = FakeCList.split(',')
-    await ctx.send(CList)
+    FakeCList = str(CList)
+    FakeCList = FakeCList.split('{')
+    #print(FakeCList[1])
+    FakeCList = FakeCList[1]
+    FakeCList = FakeCList.split(',')
+    Printout = '``` '
+    i = 0
+    for item in FakeCList:
+        Printout = Printout + FakeCList[i] + ' \n'
+        i = i + 1
+    Printout = Printout + '```'
+    Printout = Printout.replace("'","")
+    Printout = Printout.replace("}","")
+    await ctx.send(Printout)
+    
+    #CList = FakeCList.split(',')
+    #await ctx.send(CList)
     
 @Bot.command()
 async def freeshare(ctx):
@@ -58,19 +72,22 @@ async def sus(ctx, arg):
 
 @Bot.command()
 async def dividend(ctx, arg):
-    await ctx.send(arg)
-    LocalTicker = yf.Ticker(str(arg))
-    TempVar = (str(LocalTicker.dividends))
-    #print(TempVar)
-    TempStorage = (TempVar.split('\n'))
-    LineFinder = len(TempStorage) - 2
-    TempMainLine = TempStorage[LineFinder]
-    FinalSplit = TempMainLine.split(' ')
-    RealDate = FinalSplit[0].split('-')
-    PaymentLen = len(FinalSplit) - 1
-    Finalstring = '```'
-    Finalstring = Finalstring + 'Ex Date           : ' + RealDate[2] + '/' + RealDate[1] + '/' + RealDate[0] + '\nDividend Payment  : ' + FinalSplit[PaymentLen]
-    await ctx.send(Finalstring + '```')
+    try:
+        await ctx.send(arg)
+        LocalTicker = yf.Ticker(str(arg))
+        TempVar = (str(LocalTicker.dividends))
+        #print(TempVar)
+        TempStorage = (TempVar.split('\n'))
+        LineFinder = len(TempStorage) - 2
+        TempMainLine = TempStorage[LineFinder]
+        FinalSplit = TempMainLine.split(' ')
+        RealDate = FinalSplit[0].split('-')
+        PaymentLen = len(FinalSplit) - 1
+        Finalstring = '```'
+        Finalstring = Finalstring + 'Ex Date           : ' + RealDate[2] + '/' + RealDate[1] + '/' + RealDate[0] + '\nDividend Payment  : ' + FinalSplit[PaymentLen]
+        await ctx.send(Finalstring + '```')
+    except:
+        await ctx.send('```diff\n - No Dividend Found```') 
 
 @Bot.command()
 async def opinion (ctx, arg):
